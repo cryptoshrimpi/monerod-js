@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6", 
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "outDir": "lib/js"
+  },
+  "include": [
+    "lib/ts/**/*"
+  ]
+}

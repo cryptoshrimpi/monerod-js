@@ -1,0 +1,19 @@
+{
+  "name": "monerod-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine --noStackTrace"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.41",
+    "@types/node": "^7.0.5",
+    "jasmine": "^2.5.3"
+  },
+  "author": "cryptoshrimpi",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/cryptoshrimpi/monerod-js.git"
+  },
+  "license": "MIT"
+}
