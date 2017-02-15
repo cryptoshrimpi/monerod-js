@@ -34,6 +34,11 @@ type GetLastBlockHeaderPromise = Promise<{
     block_header: BlockHeader
 }>;
 
+type GetHeightPromise = Promise<{
+    height: number;
+    status: string;
+}>;
+
 type GetBlockHeaderByHashPromise = GetLastBlockHeaderPromise;
 
 type GetBlockHeaderByHeightPromise = GetLastBlockHeaderPromise;
@@ -156,14 +161,15 @@ export class MoneroDaemon {
     private hostname;
     private port;
 
-    constructor(hostname, port) {
-        this.hostname = hostname || '127.0.0.1';
-        this.port = port || 18081;
+    constructor(hostname: string = '127.0.0.1', port: number = 18081) {
+        this.hostname = hostname;
+        this.port = port;
     }
 
-    private request(requestBody: RequestBody): Promise<any> {
+    private request(requestBody: RequestBody, path: String = "/json_rpc"): Promise<any> {
 
         let requestJSON = JSON.stringify(requestBody);
+        let isDefaultPath = (path == "/json_rpc");
 
         let headers = {};
         headers["Content-Type"] = 'application/json';
@@ -172,7 +178,7 @@ export class MoneroDaemon {
         let options = {
             hostname: this.hostname,
             port: this.port,
-            path: '/json_rpc',
+            path: path,
             method: 'POST',
             headers: headers
         };
@@ -189,13 +195,16 @@ export class MoneroDaemon {
                         body.result.json = JSON.parse(body.result.json);
                     }
 
-                    if (body && body.result) {
+                    if (isDefaultPath && body && body.result) {
                         resolve(body.result);
+                    } else if (!isDefaultPath && body) {
+                        resolve(body);
                     } else if (body && body.error) {
                         reject("Daemon response error. Code: " + body.error.code + ", Message: " + body.error.message);
                     } else {
                         reject("Daemon response error");
                     }
+
                 });
             });
             req.on('error', (e) => reject("Daemon response error: " + e.message));
@@ -281,6 +290,11 @@ export class MoneroDaemon {
     public getBans(): GetBansPromise {
         let body = this.buildRequestBody("getbans", null);
         return this.request(body) as GetBansPromise;
+    }
+
+    public getHeight(): GetHeightPromise {
+        let body = this.buildRequestBody("getheight", null);
+        return this.request(body, "/getheight") as GetHeightPromise;
     }
 
 }

@@ -84,7 +84,6 @@ describe("Testing RPC call: ", function () {
     });
   });
 
-
   it("getConnections", function (done) {
     monero.getConnections().then((test) => {
       expect(test.connections.length).toBeGreaterThan(0);
@@ -118,6 +117,16 @@ describe("Testing RPC call: ", function () {
   it("getBan", function (done) {
     monero.getBans().then((test) => {
       expect(test.bans.length).toBeDefined();
+    }).catch((f) => {
+      fail(f);
+      done();
+    });
+  });
+
+  it("getHeight", function (done) {
+    monero.getHeight().then((test) => {
+      expect(test.height).toBeGreaterThan(0);
+      done();
     }).catch((f) => {
       fail(f);
       done();

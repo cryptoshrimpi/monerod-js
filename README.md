@@ -86,6 +86,8 @@ getHardFork()
 setBans(bans: BansList)
 
 getBans()
+
+getHeight()
 ```
 
 ## Beer
