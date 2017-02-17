@@ -168,7 +168,23 @@ export enum SpentStatus {
     spentInTransactionPool = 2
 }
 
-type IsKeyImageSpentPromise =  Promise<{ spent_status: SpentStatus[], status: string }>;
+
+type SendRawTransactionPromise = Promise<{
+    double_spend: boolean;
+    fee_too_low: boolean;
+    invalid_input: boolean;
+    invalid_output: boolean;
+    low_mixin: boolean;
+    not_rct: boolean;
+    not_relayed: boolean;
+    overspend: boolean;
+    reason: string;
+    status: string;
+    too_big: boolean;
+}>
+
+type IsKeyImageSpentPromise = Promise<{ spent_status: SpentStatus[], status: string }>;
+
 
 declare module getTransactionsTxsAsJson {
 
@@ -361,7 +377,11 @@ export class MoneroDaemon {
     }
 
     public isKeyImageSpent(keyImages: string[]): IsKeyImageSpentPromise {
-        return this.request({ key_images: keyImages}, "/is_key_image_spent") as IsKeyImageSpentPromise;
+        return this.request({ key_images: keyImages }, "/is_key_image_spent") as IsKeyImageSpentPromise;
+    }
+
+    public sendRawTransaction(txAsHex: string): SendRawTransactionPromise {
+        return this.request({ tx_as_hex: txAsHex }, "/sendrawtransaction") as SendRawTransactionPromise;
     }
 
 }

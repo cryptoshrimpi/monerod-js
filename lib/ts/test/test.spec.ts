@@ -2,10 +2,10 @@ import { MoneroDaemon, SpentStatus } from "../monerod-js";
 
 describe("Testing RPC call: ", function () {
 
-  var monero = new MoneroDaemon("monero.whattheserver.me", 8081);
+  var monerod = new MoneroDaemon("monero.whattheserver.me", 8081);
 
   it("getHardFork", function (done) {
-    monero.getHardFork().then((test) => {
+    monerod.getHardFork().then((test) => {
       expect(test.status).toBeDefined();
       done();
     }).catch((f) => {
@@ -15,7 +15,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBlock", function (done) {
-    monero.getBlock(1, null).then((test) => {
+    monerod.getBlock(1, null).then((test) => {
       expect(test.json).toBeDefined();
       expect(test.json.timestamp).toBe(1397818193);
       done();
@@ -26,7 +26,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBlockCount", function (done) {
-    monero.getBlockCount().then((test) => {
+    monerod.getBlockCount().then((test) => {
       expect(test.count).toBeGreaterThan(1);
       done();
     }).catch((f) => {
@@ -36,7 +36,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("onGetBlockHash", function (done) {
-    monero.onGetBlockHash(1).then((test) => {
+    monerod.onGetBlockHash(1).then((test) => {
       expect(test).toBe("771fbcd656ec1464d3a02ead5e18644030007a0fc664c0a964d30922821a8148");
       done();
     }).catch((f) => {
@@ -46,7 +46,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBlockTemplate", function (done) {
-    monero.getBlockTemplate("44GBHzv6ZyQdJkjqZje6KLZ3xSyN1hBSFAnLP6EAqJtCRVzMzZmeXTC2AHKDS9aEDTRKmo6a6o9r9j86pYfhCWDkKjbtcns", 3).then((test) => {
+    monerod.getBlockTemplate("44GBHzv6ZyQdJkjqZje6KLZ3xSyN1hBSFAnLP6EAqJtCRVzMzZmeXTC2AHKDS9aEDTRKmo6a6o9r9j86pYfhCWDkKjbtcns", 3).then((test) => {
       expect(test.reserved_offset).toBe(130);
       done();
     }).catch((f) => {
@@ -56,7 +56,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getLastBlockHeader", function (done) {
-    monero.getLastBlockHeader().then((test) => {
+    monerod.getLastBlockHeader().then((test) => {
       expect(test.block_header.timestamp).toBeGreaterThan(1486583838);
       done();
     }).catch((f) => {
@@ -66,7 +66,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBlockHeaderByHash", function (done) {
-    monero.getBlockHeaderByHash("e22cf75f39ae720e8b71b3d120a5ac03f0db50bba6379e2850975b4859190bc6").then((test) => {
+    monerod.getBlockHeaderByHash("e22cf75f39ae720e8b71b3d120a5ac03f0db50bba6379e2850975b4859190bc6").then((test) => {
       expect(test.block_header.timestamp).toBe(1452793716);
       done();
     }).catch((f) => {
@@ -76,7 +76,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBlockHeaderByHeight", function (done) {
-    monero.getBlockHeaderByHeight(1).then((test) => {
+    monerod.getBlockHeaderByHeight(1).then((test) => {
       expect(test.block_header.timestamp).toBe(1397818193);
       done();
     }).catch((f) => {
@@ -86,7 +86,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getConnections", function (done) {
-    monero.getConnections().then((test) => {
+    monerod.getConnections().then((test) => {
       expect(test.connections.length).toBeGreaterThan(0);
       done();
     }).catch((f) => {
@@ -96,7 +96,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getInfo - Incoming connections", function (done) {
-    monero.getInfo().then((test) => {
+    monerod.getInfo().then((test) => {
       expect(test.incoming_connections_count).toBeGreaterThan(0);
       done();
     }).catch((f) => {
@@ -106,7 +106,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("setBan", function (done) {
-    monero.setBans([{ ip: "0.0.0.0", ban: true, seconds: 10 }]).then((test) => {
+    monerod.setBans([{ ip: "0.0.0.0", ban: true, seconds: 10 }]).then((test) => {
       expect(test.status).toBeDefined();
       done();
     }).catch((f) => {
@@ -116,7 +116,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getBan", function (done) {
-    monero.getBans().then((test) => {
+    monerod.getBans().then((test) => {
       expect(test.bans.length).toBeDefined();
     }).catch((f) => {
       fail(f);
@@ -125,7 +125,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getHeight", function (done) {
-    monero.getHeight().then((test) => {
+    monerod.getHeight().then((test) => {
       expect(test.height).toBeGreaterThan(0);
       done();
     }).catch((f) => {
@@ -135,7 +135,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getTransactions('d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408', false)", function (done) {
-    monero.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], false).then((test) => {
+    monerod.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], false).then((test) => {
       expect(test.status).toEqual("OK");
       expect(test.txs_as_hex).toBeDefined();
       expect(test.txs_as_json).toBeUndefined();
@@ -147,7 +147,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("getTransactions('d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408', true)", function (done) {
-    monero.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], true).then((test) => {
+    monerod.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], true).then((test) => {
       expect(test.status).toEqual("OK");
       expect(test.txs_as_hex).toBeDefined();
       expect(test.txs_as_json).toBeDefined();
@@ -160,7 +160,7 @@ describe("Testing RPC call: ", function () {
   });
 
   it("isKeyImageSpent", function (done) {
-    monero.isKeyImageSpent(["8d1bd8181bf7d857bdb281e0153d84cd55a3fcaa57c3e570f4a49f935850b5e3","7319134bfc50668251f5b899c66b005805ee255c136f0e1cecbb0f3a912e09d4"]).then((test) => {
+    monerod.isKeyImageSpent(["8d1bd8181bf7d857bdb281e0153d84cd55a3fcaa57c3e570f4a49f935850b5e3","7319134bfc50668251f5b899c66b005805ee255c136f0e1cecbb0f3a912e09d4"]).then((test) => {
       expect(test.status).toEqual("OK");
       expect(test.spent_status).toEqual([SpentStatus.spentInBlockchain, SpentStatus.spentInBlockchain]);
       done();
@@ -169,5 +169,20 @@ describe("Testing RPC call: ", function () {
       done();
     });
   });
+
+  /*
+
+  /sendrawtransaction is a critical rpc call. therefore this test should be activated by explicitly uncommenting it. 
+
+  it("sendRawTransaction should fail", function (done) {
+    monerod.sendRawTransaction("abc").then((test) => {
+      expect(test.status).toEqual("Failed");
+      expect(test.double_spend).toEqual(false);
+      done();
+    }).catch((f) => {
+      fail(f);
+      done();
+    });
+  });*/
 
 })
