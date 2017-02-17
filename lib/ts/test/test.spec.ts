@@ -1,4 +1,4 @@
-import { MoneroDaemon } from "../monerod-js";
+import { MoneroDaemon, SpentStatus } from "../monerod-js";
 
 describe("Testing RPC call: ", function () {
 
@@ -152,6 +152,17 @@ describe("Testing RPC call: ", function () {
       expect(test.txs_as_hex).toBeDefined();
       expect(test.txs_as_json).toBeDefined();
       expect(test.txs_as_json.vin[0].key.amount).toEqual(9999999999);
+      done();
+    }).catch((f) => {
+      fail(f);
+      done();
+    });
+  });
+
+  it("isKeyImageSpent", function (done) {
+    monero.isKeyImageSpent(["8d1bd8181bf7d857bdb281e0153d84cd55a3fcaa57c3e570f4a49f935850b5e3","7319134bfc50668251f5b899c66b005805ee255c136f0e1cecbb0f3a912e09d4"]).then((test) => {
+      expect(test.status).toEqual("OK");
+      expect(test.spent_status).toEqual([SpentStatus.spentInBlockchain, SpentStatus.spentInBlockchain]);
       done();
     }).catch((f) => {
       fail(f);

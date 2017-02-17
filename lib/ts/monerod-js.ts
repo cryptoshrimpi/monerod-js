@@ -162,6 +162,14 @@ type GetTransactionsPromise = Promise<{
     txs_as_json: getTransactionsTxsAsJson.Root
 }>
 
+export enum SpentStatus {
+    unspent = 0,
+    spentInBlockchain = 1,
+    spentInTransactionPool = 2
+}
+
+type IsKeyImageSpentPromise =  Promise<{ spent_status: SpentStatus[], status: string }>;
+
 declare module getTransactionsTxsAsJson {
 
     type Key = {
@@ -350,6 +358,10 @@ export class MoneroDaemon {
                 reject(f);
             });
         }) as GetTransactionsPromise;
+    }
+
+    public isKeyImageSpent(keyImages: string[]): IsKeyImageSpentPromise {
+        return this.request({ key_images: keyImages}, "/is_key_image_spent") as IsKeyImageSpentPromise;
     }
 
 }
