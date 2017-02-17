@@ -156,6 +156,40 @@ type GetBansPromise = Promise<{
 
 type RequestBody = { jsonrpc: string, id: string, method: string, params: any };
 
+type GetTransactionsPromise = Promise<{
+    status: string,
+    txs_as_hex: string,
+    txs_as_json: getTransactionsTxsAsJson.Root
+}>
+
+declare module getTransactionsTxsAsJson {
+
+    type Key = {
+        amount: number;
+        key_offsets: number[];
+        k_image: string;
+    }
+
+    type Vin = {
+        key: Key;
+    }
+
+    type Vout = {
+        amount: number;
+        target: { key: string };
+    }
+
+    export type Root = {
+        version: number;
+        unlock_time: number;
+        vin: Vin[];
+        vout: Vout[];
+        extra: number[];
+        signatures: string[];
+    }
+
+}
+
 export class MoneroDaemon {
 
     private hostname;
@@ -166,7 +200,11 @@ export class MoneroDaemon {
         this.port = port;
     }
 
-    private request(requestBody: RequestBody, path: String = "/json_rpc"): Promise<any> {
+    private defaultRequest(requestBody: RequestBody): Promise<any> {
+        return this.request(requestBody, "/json_rpc");
+    }
+
+    private request(requestBody: any, path: String): Promise<any> {
 
         let requestJSON = JSON.stringify(requestBody);
         let isDefaultPath = (path == "/json_rpc");
@@ -191,10 +229,6 @@ export class MoneroDaemon {
                 res.on('end', function () {
                     let body = JSON.parse(data);
 
-                    if (requestBody.method == "getblock") {
-                        body.result.json = JSON.parse(body.result.json);
-                    }
-
                     if (isDefaultPath && body && body.result) {
                         resolve(body.result);
                     } else if (!isDefaultPath && body) {
@@ -213,7 +247,7 @@ export class MoneroDaemon {
         });
     }
 
-    private buildRequestBody(method: string, params: any): RequestBody {
+    private buildDefaultRequestBody(method: string, params: any): RequestBody {
         return {
             jsonrpc: '2.0',
             id: '0',
@@ -223,78 +257,99 @@ export class MoneroDaemon {
     }
 
     public getBlockCount(): GetBlockCountPromise {
-        let body = this.buildRequestBody("getblockcount", null);
-        return this.request(body) as GetBlockCountPromise;
+        let body = this.buildDefaultRequestBody("getblockcount", null);
+        return this.defaultRequest(body) as GetBlockCountPromise;
     }
 
     public onGetBlockHash(blockHeight: number): OnGetBlockHashPromise {
-        let body = this.buildRequestBody("on_getblockhash", [blockHeight]);
-        return this.request(body) as OnGetBlockHashPromise;
+        let body = this.buildDefaultRequestBody("on_getblockhash", [blockHeight]);
+        return this.defaultRequest(body) as OnGetBlockHashPromise;
     }
 
     public getBlockTemplate(walletAddress: string, reserveSize: number): GetBlockTemplatePromise {
-        let body = this.buildRequestBody("getblocktemplate", {
+        let body = this.buildDefaultRequestBody("getblocktemplate", {
             "wallet_address": walletAddress,
             "reserve_size": reserveSize
         });
-        return this.request(body) as GetBlockTemplatePromise;
+        return this.defaultRequest(body) as GetBlockTemplatePromise;
     }
 
     public getLastBlockHeader(): GetLastBlockHeaderPromise {
-        let body = this.buildRequestBody("getlastblockheader", null);
-        return this.request(body) as GetLastBlockHeaderPromise;
+        let body = this.buildDefaultRequestBody("getlastblockheader", null);
+        return this.defaultRequest(body) as GetLastBlockHeaderPromise;
     }
 
     public getBlockHeaderByHash(hash: string): GetBlockHeaderByHashPromise {
-        let body = this.buildRequestBody("getblockheaderbyhash", {
+        let body = this.buildDefaultRequestBody("getblockheaderbyhash", {
             "hash": hash
         });
-        return this.request(body) as GetBlockHeaderByHashPromise;
+        return this.defaultRequest(body) as GetBlockHeaderByHashPromise;
     }
 
     public getBlockHeaderByHeight(height: number): GetBlockHeaderByHeightPromise {
-        let body = this.buildRequestBody("getblockheaderbyheight", {
+        let body = this.buildDefaultRequestBody("getblockheaderbyheight", {
             "height": height
         });
-        return this.request(body) as GetBlockHeaderByHeightPromise;
+        return this.defaultRequest(body) as GetBlockHeaderByHeightPromise;
     }
 
     public getBlock(height: number, hash: string): GetBlockPromise {
-        let body = this.buildRequestBody("getblock", {
+        let body = this.buildDefaultRequestBody("getblock", {
             "height": height,
             "hash": hash
         });
-        return this.request(body) as GetBlockPromise;
+
+        return new Promise((resolve, reject) => {
+            this.defaultRequest(body).then((a) => {
+                a.json = JSON.parse(a.json);
+                resolve(a);
+            }).catch((f) => {
+                reject(f);
+            });
+        }) as GetBlockPromise;
     }
 
     public getConnections(): GetConnectionsPromise {
-        let body = this.buildRequestBody("get_connections", null);
-        return this.request(body) as GetConnectionsPromise;
+        let body = this.buildDefaultRequestBody("get_connections", null);
+        return this.defaultRequest(body) as GetConnectionsPromise;
     }
 
     public getInfo(): GetInfoPromise {
-        let body = this.buildRequestBody("get_info", null);
-        return this.request(body) as GetInfoPromise;
+        let body = this.buildDefaultRequestBody("get_info", null);
+        return this.defaultRequest(body) as GetInfoPromise;
     }
 
     public getHardFork(): GetHardForkPromise {
-        let body = this.buildRequestBody("hard_fork_info", null);
-        return this.request(body) as GetHardForkPromise;
+        let body = this.buildDefaultRequestBody("hard_fork_info", null);
+        return this.defaultRequest(body) as GetHardForkPromise;
     }
 
     public setBans(bans: BansList): SetBansPromise {
-        let body = this.buildRequestBody("setbans", { "bans": bans });
-        return this.request(body) as SetBansPromise;
+        let body = this.buildDefaultRequestBody("setbans", { "bans": bans });
+        return this.defaultRequest(body) as SetBansPromise;
     }
 
     public getBans(): GetBansPromise {
-        let body = this.buildRequestBody("getbans", null);
-        return this.request(body) as GetBansPromise;
+        let body = this.buildDefaultRequestBody("getbans", null);
+        return this.defaultRequest(body) as GetBansPromise;
     }
 
     public getHeight(): GetHeightPromise {
-        let body = this.buildRequestBody("getheight", null);
-        return this.request(body, "/getheight") as GetHeightPromise;
+        return this.request({}, "/getheight") as GetHeightPromise;
+    }
+
+    public getTransactions(txsHashes: string[], decodeAsJson: boolean): GetTransactionsPromise {
+        let body = { txs_hashes: txsHashes, decode_as_json: decodeAsJson };
+        return new Promise((resolve, reject) => {
+            this.request(body, "/gettransactions").then((a) => {
+                if (decodeAsJson) {
+                    a.txs_as_json = JSON.parse(a.txs_as_json);
+                }
+                resolve(a);
+            }).catch((f) => {
+                reject(f);
+            });
+        }) as GetTransactionsPromise;
     }
 
 }

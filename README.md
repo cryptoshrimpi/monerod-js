@@ -88,6 +88,8 @@ setBans(bans: BansList)
 getBans()
 
 getHeight()
+
+getTransactions(txsHashes: string[], decodeAsJson: boolean)
 ```
 
 ## Beer
