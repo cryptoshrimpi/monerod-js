@@ -46,7 +46,8 @@ type GetBlockHeaderByHeightPromise = GetLastBlockHeaderPromise;
 type GetBlockPromise = Promise<{
     blob: string;
     block_header: BlockHeader;
-    json: GetBlockJSON.Root;
+    // json: GetBlockJSON.Root;
+    json: any;
     status: string;
 }>;
 
@@ -159,7 +160,8 @@ type RequestBody = { jsonrpc: string, id: string, method: string, params: any };
 type GetTransactionsPromise = Promise<{
     status: string,
     txs_as_hex: string,
-    txs_as_json: getTransactionsTxsAsJson.Root
+    // txs_as_json: getTransactionsTxsAsJson.Root
+    txs_as_json: any;
 }>
 
 export enum SpentStatus {
@@ -185,6 +187,64 @@ type SendRawTransactionPromise = Promise<{
 
 type IsKeyImageSpentPromise = Promise<{ spent_status: SpentStatus[], status: string }>;
 
+type GetTransactionPoolPromise = Promise<{
+    spent_key_images: {
+        id_hash: string;
+        txs_hashes: string[]
+    }[];
+    status: string;
+    transactions: {
+        blob_size: number;
+        fee: any;
+        id_hash: string;
+        kept_by_block: boolean;
+        last_failed_height: number;
+        last_failed_id_hash: string;
+        max_used_block_height: number;
+        max_used_block_id_hash: string;
+        receive_time: number;
+        relayed: boolean;
+        // tx_json: GetTransactionPoolTransaction;
+        tx_json: string; // monero returns invalid json...
+    }[];
+}>;
+
+
+type GetTransactionPoolTransaction = {
+    version: number;
+    unlock_time: number;
+    vin: {
+        key: {
+            amount: number;
+            key_offsets: number[];
+            k_image: string;
+        }
+    }[];
+    vout: {
+        amount: number;
+        target: { key: string; }
+    }[];
+    extra: number[];
+    rct_signatures: {
+        type: number;
+        txnFee: number;
+        ecdhInfo: {
+            mask: string;
+            amount: string;
+        }[];
+        outPk: string[];
+    };
+    rctsig_prunable: {
+        rangeSigs: {
+            asig: string;
+            Ci: string;
+        }[];
+        MGs: {
+            ss: string[][];
+            cc: string;
+        }[];
+    };
+}
 
 declare module getTransactionsTxsAsJson {
 
@@ -364,6 +424,7 @@ export class MoneroDaemon {
 
     public getTransactions(txsHashes: string[], decodeAsJson: boolean): GetTransactionsPromise {
         let body = { txs_hashes: txsHashes, decode_as_json: decodeAsJson };
+
         return new Promise((resolve, reject) => {
             this.request(body, "/gettransactions").then((a) => {
                 if (decodeAsJson) {
@@ -382,6 +443,23 @@ export class MoneroDaemon {
 
     public sendRawTransaction(txAsHex: string): SendRawTransactionPromise {
         return this.request({ tx_as_hex: txAsHex }, "/sendrawtransaction") as SendRawTransactionPromise;
+    }
+
+    public getTransactionPool(): GetTransactionPoolPromise {
+        return new Promise((resolve, reject) => {
+            this.request({}, "/get_transaction_pool").then((a) => {
+
+                /*
+                Monero returns invalid JSON
+                for (var key in a.transactions) {
+                    a.transactions[key].tx_json = JSON.parse(a.transactions[key].tx_json);
+                }*/
+
+                resolve(a);
+            }).catch((f) => {
+                reject(f);
+            });
+        }) as GetTransactionPoolPromise;
     }
 
 }

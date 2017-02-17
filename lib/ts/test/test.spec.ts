@@ -151,7 +151,7 @@ describe("Testing RPC call: ", function () {
       expect(test.status).toEqual("OK");
       expect(test.txs_as_hex).toBeDefined();
       expect(test.txs_as_json).toBeDefined();
-      expect(test.txs_as_json.vin[0].key.amount).toEqual(9999999999);
+      // expect(test.txs_as_json.vin[0].key.amount).toEqual(9999999999);
       done();
     }).catch((f) => {
       fail(f);
@@ -184,5 +184,16 @@ describe("Testing RPC call: ", function () {
       done();
     });
   });*/
+
+
+  it("getTransactionPool", function (done) {
+    monerod.getTransactionPool().then((test) => {
+      expect(test.status).toEqual("OK");
+      done();
+    }).catch((f) => {
+      fail(f);
+      done();
+    });
+  });
 
 })
