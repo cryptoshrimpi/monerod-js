@@ -90,6 +90,8 @@ getBans()
 getHeight()
 
 getTransactions(txsHashes: string[], decodeAsJson: boolean)
+
+sendRawTransaction(txAsHex: string)
 ```
 
 ## Beer
