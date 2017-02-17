@@ -92,6 +92,8 @@ getHeight()
 getTransactions(txsHashes: string[], decodeAsJson: boolean)
 
 sendRawTransaction(txAsHex: string)
+
+getTransactionPool()
 ```
 
 ## Beer
