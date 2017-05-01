@@ -6,6 +6,8 @@ It is written in Typescript and transpiled to Javascript. I recommend you to use
 
 The official Monero Daemon RPC documentation can be found [here](https://getmonero.org/knowledge-base/developer-guides/daemon-rpc).
 
+Developed for / Last tested with Monerod v0.10.1.0.
+
 ## Install
 ```
 npm install cryptoshrimpi/monerod-js
@@ -99,7 +101,7 @@ getTransactionPool()
 ## Beer
 Thanks in advance if you wanna tip me with a beer :-)
 
-Monero: ```4AZ75ZMRodTVhGC5KsMzMf4zf1y2Rc4bzYYDiV26XcNt9SKf53J24byXwqGyT6kWhVXxmHfiaXW6iUJiwAXP8yy3A1ChxTj```
+Monero: ```4ATwquCmjnUTuDcF2Yce4YMLexuyFMKF96W7gEA6QU8S5pffgFDi9i29R8yyvHq1MzBVNVXZXUuEtdqpgVRC2hTc7Vtuahu```
 
 ## License
 MIT. See [LICENSE.md](LICENSE.md).
