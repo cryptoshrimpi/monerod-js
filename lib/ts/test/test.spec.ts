@@ -216,5 +216,15 @@ describe("Testing RPC call: ", function () {
     });
   });
 
+  it("getFeeEstimate", function (done) {
+    monerod.getFeeEstimate().then((data) => {
+        expect(data.status).toEqual("OK")
+        expect(data.fee).toBeGreaterThan(0)
+        done()
+    }).catch((f) => {
+        fail(f);
+        done();
+    });
+  });
 
 })

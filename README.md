@@ -100,6 +100,8 @@ getTransactionPool()
 submitBlock(blockBlobData: string)
 
 getVersion()
+
+getFeeEstimate()
 ```
 
 ## Beer

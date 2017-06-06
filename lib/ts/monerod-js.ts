@@ -39,6 +39,11 @@ type BlockHeader = {
     timestamp: number;
 };
 
+type GetFeeEstimatePromise = Promise<{
+    status: string,
+    fee: number
+}>;
+
 type GetLastBlockHeaderPromise = Promise<{
     block_header: BlockHeader
 }>;
@@ -479,6 +484,11 @@ export class MoneroDaemon {
     public getVersion(): GetVersionPromise {
         let body = this.buildDefaultRequestBody("get_version", null);
         return this.defaultRequest(body) as GetVersionPromise;
+    }
+
+    public getFeeEstimate(): GetFeeEstimatePromise {
+        let body = this.buildDefaultRequestBody("get_fee_estimate", null);
+        return this.defaultRequest(body) as GetFeeEstimatePromise;
     }
 
 }
