@@ -1,7 +1,16 @@
 var http = require('http');
 
+type GetVersionPromise = Promise<{
+    status: string,
+    version: number
+}>
+
 type GetBlockCountPromise = Promise<{
     count: number,
+    status: string
+}>
+
+type SubmitBlockPromise = Promise<{
     status: string
 }>
 
@@ -460,6 +469,16 @@ export class MoneroDaemon {
                 reject(f);
             });
         }) as GetTransactionPoolPromise;
+    }
+
+    public submitBlock(blockBlobData: string): SubmitBlockPromise {
+        let body = this.buildDefaultRequestBody("submitblock", [blockBlobData]);
+        return this.defaultRequest(body) as SubmitBlockPromise;
+    }
+
+    public getVersion(): GetVersionPromise {
+        let body = this.buildDefaultRequestBody("get_version", null);
+        return this.defaultRequest(body) as GetVersionPromise;
     }
 
 }

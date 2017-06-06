@@ -6,7 +6,7 @@ It is written in Typescript and transpiled to Javascript. I recommend you to use
 
 The official Monero Daemon RPC documentation can be found [here](https://getmonero.org/knowledge-base/developer-guides/daemon-rpc).
 
-Developed for / Last tested with Monerod v0.10.1.0.
+Developed for / Last tested with Monerod v0.10.3.1.
 
 ## Install
 ```
@@ -96,6 +96,10 @@ getTransactions(txsHashes: string[], decodeAsJson: boolean)
 sendRawTransaction(txAsHex: string)
 
 getTransactionPool()
+
+submitBlock(blockBlobData: string)
+
+getVersion()
 ```
 
 ## Beer
