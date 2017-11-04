@@ -2,7 +2,7 @@
 
 Monerod-js is a NodeJS RPC Client for Monero Daemon. 
 
-It is written in Typescript and transpiled to Javascript. Developing in Typescript version comes with the benefit that all the return values are typed.
+It is written in Typescript and transpiled to Javascript. Using the Typescript version for development comes with the benefit that all the return values are typed.
 
 The official Monero Daemon RPC documentation can be found [here](https://getmonero.org/knowledge-base/developer-guides/daemon-rpc).
 
