@@ -173,9 +173,9 @@ type RequestBody = { jsonrpc: string, id: string, method: string, params: any };
 
 type GetTransactionsPromise = Promise<{
     status: string,
-    txs_as_hex: string,
-    // txs_as_json: getTransactionsTxsAsJson.Root
-    txs_as_json: any;
+    txs_as_hex?: string,
+    txs_as_json?: any,
+    missed_tx?: string[];
 }>
 
 export enum SpentStatus {
@@ -183,7 +183,6 @@ export enum SpentStatus {
     spentInBlockchain = 1,
     spentInTransactionPool = 2
 }
-
 
 type SendRawTransactionPromise = Promise<{
     double_spend: boolean;
@@ -440,8 +439,8 @@ export class MoneroDaemon {
         let body = { txs_hashes: txsHashes, decode_as_json: decodeAsJson };
 
         return new Promise((resolve, reject) => {
-            this.request(body, "/gettransactions").then((a) => {
-                if (decodeAsJson) {
+            this.request(body, "/gettransactions").then((a: any) => {
+                if (decodeAsJson && a.hasOwnProperty("txs_as_json")) {
                     a.txs_as_json = JSON.parse(a.txs_as_json);
                 }
                 resolve(a);

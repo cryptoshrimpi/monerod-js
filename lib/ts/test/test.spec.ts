@@ -134,7 +134,21 @@ describe("Testing RPC call: ", function () {
     });
   });
 
-  it("getTransactions('d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408', false)", function (done) {
+  // Should return only missing tx
+  it("getTransactions should return missing tx, true)", function (done) {
+  monerod.getTransactions(['f061d04308f89fd3b18a86f1cb28ab62b1e5aa79364c83ad7ce11a0c7d08fbcb'], true).then(txInfo =>{
+    expect(txInfo.status).toEqual("OK");
+    expect(txInfo.missed_tx[0]).toEqual('f061d04308f89fd3b18a86f1cb28ab62b1e5aa79364c83ad7ce11a0c7d08fbcb');
+    expect(txInfo.txs_as_json).toBeUndefined();
+    expect(txInfo.txs_as_hex).toBeUndefined();
+    done();
+ }).catch((f) => {
+      fail(f);
+      done();
+    });
+  });
+
+  it("getTransactions(['d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408'], false)", function (done) {
     monerod.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], false).then((test) => {
       expect(test.status).toEqual("OK");
       expect(test.txs_as_hex).toBeDefined();
@@ -146,7 +160,7 @@ describe("Testing RPC call: ", function () {
     });
   });
 
-  it("getTransactions('d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408', true)", function (done) {
+  it("getTransactions(['d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408'], true)", function (done) {
     monerod.getTransactions(["d6e48158472848e6687173a91ae6eebfa3e1d778e65252ee99d7515d63090408"], true).then((test) => {
       expect(test.status).toEqual("OK");
       expect(test.txs_as_hex).toBeDefined();
